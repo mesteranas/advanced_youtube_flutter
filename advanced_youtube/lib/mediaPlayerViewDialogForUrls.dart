@@ -1,8 +1,8 @@
+import 'downloadVideos.dart';
 import 'package:http/http.dart' as http;
-import 'package:test/app.dart';
+import 'app.dart';
 import 'dart:convert';
 import 'viewText.dart';
-import 'language.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 import 'package:video_player/video_player.dart';
 import 'package:flutter/material.dart';
@@ -310,8 +310,19 @@ class _MediaPlayerURLViewerState extends State<MediaPlayerURLViewer> {
                                                 );
                                               },
                                               icon: Icon(Icons.comment),
-                                              tooltip: _("comments"),
-                                            ),                                        
+                                              tooltip: _("comments"),),
+                                              IconButton(icon: Icon(Icons.download),tooltip: _("download video"),onPressed:() async{
+                                                    var yt = YoutubeExplode();
+        var video = await yt.videos.get(this.filePath);
+        var manifest = await yt.videos.streamsClient.getManifest(video.id);
+        var streams={};
+        for(var stream in manifest.streams){
+          streams[stream.qualityLabel + stream.codec.type]={"url":stream.url,"type":stream.codec.type,"title":title};
+        }
+        Navigator.pop(context);
+        Navigator.push(context, MaterialPageRoute(builder: (context)=>ShowAllQualitiesToDownload(streams)));
+                                              } ,),
+
                                       ],
                                       content:Center(
                                         child:Column(
