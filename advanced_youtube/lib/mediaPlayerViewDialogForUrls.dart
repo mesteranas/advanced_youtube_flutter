@@ -1,3 +1,5 @@
+import 'package:test/history/historyJsonControl.dart';
+
 import 'favourites/favouritesJsonControl.dart';
 import 'channel.dart';
 import 'downloadVideos.dart';
@@ -19,6 +21,7 @@ class MediaPlayerURLViewer extends StatefulWidget {
 }
 
 class _MediaPlayerURLViewerState extends State<MediaPlayerURLViewer> {
+  bool isPositionSet=false;
   var isFavourite=false;
   var channelId="";
   var duration="";
@@ -94,15 +97,24 @@ class _MediaPlayerURLViewerState extends State<MediaPlayerURLViewer> {
     _controller = VideoPlayerController.network(stream.url.toString());
     _initializeVideoPlayerFuture = _controller!.initialize();
     _controller!.setLooping(true);
-    _controller!.addListener(() {
+    _controller!.addListener(()async {
+      if(!isPositionSet&&_controller!.value.position.inSeconds==2){
+        _controller!.seekTo(Duration(seconds: await getPosition(title, videoID)));
+        setState(() {
+          isPositionSet=true;
+        });
+      }
       setState(() {});
     });
-    _controller!.play();
+    await _controller!.play();
     setState(() {});
+    
   }
 
   @override
   void dispose() {
+
+    savePosition(title, videoID, _controller!.value.position.inSeconds);
     _controller?.dispose();
     super.dispose();
   }
@@ -179,13 +191,13 @@ class _MediaPlayerURLViewerState extends State<MediaPlayerURLViewer> {
                           if (!isFullScreen) ...[
                             IconButton(
                               icon: Icon(Icons.replay_10),
-                              tooltip: 'Rewind 10 seconds',
+                              tooltip: _('Rewind 10 seconds'),
                               onPressed: _rewind,
                             ),
                             IconButton(
                               icon: Icon(
                                   _controller!.value.isPlaying ? Icons.pause : Icons.play_arrow),
-                              tooltip: _controller!.value.isPlaying ? 'Pause' : 'Play',
+                              tooltip: _controller!.value.isPlaying ? _('Pause') : _('Play'),
                               onPressed: () {
                                 setState(() {
                                   _controller!.value.isPlaying
@@ -196,7 +208,7 @@ class _MediaPlayerURLViewerState extends State<MediaPlayerURLViewer> {
                             ),
                             IconButton(
                               icon: Icon(Icons.forward_10),
-                              tooltip: 'Fast forward 10 seconds',
+                              tooltip: _('Fast forward 10 seconds'),
                               onPressed: _fastForward,
                             ),
                             Column(

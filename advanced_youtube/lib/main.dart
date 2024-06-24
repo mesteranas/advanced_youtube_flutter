@@ -1,4 +1,5 @@
 import 'package:test/favourites/favouritesGUI.dart';
+import 'package:test/history/historyGUI.dart';
 import 'package:test/trendingVideos.dart';
 
 import 'results/channelsResults .dart';
@@ -242,6 +243,9 @@ class _TestState extends State<Test> {
               ElevatedButton(onPressed: (){
                 Navigator.push(context, MaterialPageRoute(builder: (context)=>TrendingVideos()));
               }, child: Text(_("trending videos"))),
+              ElevatedButton(onPressed: (){
+                Navigator.push(context, MaterialPageRoute(builder: (context)=>HistoryGUI()));
+              }, child: Text(_("watch history"))),
             ],
           ),
         ),
