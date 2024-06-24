@@ -1,3 +1,5 @@
+import 'favourites/favouritesJsonControl.dart';
+import 'channel.dart';
 import 'downloadVideos.dart';
 import 'package:http/http.dart' as http;
 import 'app.dart';
@@ -17,6 +19,8 @@ class MediaPlayerURLViewer extends StatefulWidget {
 }
 
 class _MediaPlayerURLViewerState extends State<MediaPlayerURLViewer> {
+  var isFavourite=false;
+  var channelId="";
   var duration="";
   var videoID="";
   var publishDate="";
@@ -77,10 +81,12 @@ class _MediaPlayerURLViewerState extends State<MediaPlayerURLViewer> {
     var yt = YoutubeExplode();
     var video = await yt.videos.get(filePath);
     title=video.title;
+    channelId=video.channelId.toString();
     description=video.description;
     duration=video.duration?.inMinutes.toString()??"";
     publishDate=video.publishDate.toString();
     videoID=video.id.value;
+    isFavourite=await check(0, title, channelId);
 
     var manifest = await yt.videos.streamsClient.getManifest(video.id);
     var stream = manifest.muxed.withHighestBitrate();
@@ -322,13 +328,33 @@ class _MediaPlayerURLViewerState extends State<MediaPlayerURLViewer> {
         Navigator.pop(context);
         Navigator.push(context, MaterialPageRoute(builder: (context)=>ShowAllQualitiesToDownload(streams)));
                                               } ,),
+          ElevatedButton(onPressed: (){
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>Channels(q: channelId)));
+          }, child: Text(_("go to channel"))),
 
                                       ],
                                       content:Center(
                                         child:Column(
                                           children: [
                                             ListTile(title: Text(_("duration ") + duration + _(" minuts")),),
-                                            ListTile(title: Text(_("published on ") + publishDate),)
+                                            ListTile(title: Text(_("published on ") + publishDate),),
+                                                                CheckboxListTile(
+            value: isFavourite,
+            onChanged: (bool? newValue) async{
+              setState(() {
+                isFavourite = newValue ?? false;
+                              });
+                if (isFavourite) {
+                  await addFavourite(0, title, channelId, videoID);
+                } else {
+                  await removeFromFavourite(0, title, channelId);
+                }
+                Navigator.pop(context);
+            },
+            title: Text(_("favourite")),
+          ),
+
+
                                           ],
                                         ) ,
                                       ) ,

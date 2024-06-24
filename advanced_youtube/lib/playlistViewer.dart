@@ -1,3 +1,5 @@
+import 'favourites/favouritesJsonControl.dart';
+import 'channel.dart';
 import 'mediaPlayerViewDialogForUrls.dart';
 import 'package:flutter_share/flutter_share.dart';
 import 'package:flutter/services.dart';
@@ -14,6 +16,9 @@ class Playlistviewer extends StatefulWidget{
   State<Playlistviewer> createState()=>_Playlistviewer(q);
 }
 class _Playlistviewer extends State<Playlistviewer>{
+  var title="";
+  var isFavourite=false;
+  var channelId="";
   var nextPageId="";
   var loading=true;
   var results={};
@@ -31,6 +36,9 @@ class _Playlistviewer extends State<Playlistviewer>{
     if (responce.statusCode==200){
       var data=jsonDecode(responce.body);
       nextPageId=data["nextPageToken"].toString();
+      channelId=data['items'][0]['snippet']['channelId'];
+      title = data['items'][0]['snippet']['title'];
+      isFavourite=await check(1, title, channelId);
       for ( var video in data["items"]){
 
         results[video["snippet"]["title"].toString() + _(" by ") + video["snippet"]["channelTitle"].toString()]="https://www.youtube.com/watch?v=" + video["snippet"]["resourceId"]["videoId"].toString();
@@ -49,12 +57,46 @@ class _Playlistviewer extends State<Playlistviewer>{
   Widget build(BuildContext context){
     return Scaffold(
       appBar: AppBar(
-        title: Text(_("playlist")),
+        title: Text(title),
         actions: [
           IconButton(onPressed: (){
             load();
-          }, icon: Icon(Icons.more),tooltip: _("show more"),)
+          }, icon: Icon(Icons.more),tooltip: _("show more"),),
+IconButton(onPressed: (){
+  showDialog(context: context, builder: (BuildContext context){
+    return AlertDialog(
+      title: Text(_("more options")),
+      content: Center(
+        child: Column(
+          children: [
+                      ElevatedButton(onPressed: (){
+                        Navigator.pop(context);
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>Channels(q: channelId)));
+          }, child: Text(_("go to channel"))),
+                    CheckboxListTile(
+            value: isFavourite,
+            onChanged: (bool? newValue) async{
+              setState(() {
+                isFavourite = newValue ?? false;
+                              });
+                if (isFavourite) {
+                  await addFavourite(1, title, channelId, q);
+                } else {
+                  await removeFromFavourite(1, title, channelId);
+                }
+                Navigator.pop(context);
+            },
+            title: Text(_("favourite")),
+          ),
+
+          ],
+        ),
+      ),
+    );
+  });
+}, icon: Icon(Icons.more),tooltip:_("more options") ,)          
         ],
+
       ),
       body: Center(
         child:

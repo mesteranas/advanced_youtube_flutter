@@ -1,3 +1,4 @@
+import 'favourites/favouritesJsonControl.dart';
 import 'playlistViewer.dart';
 import 'package:flutter_share/flutter_share.dart';
 import 'package:flutter/services.dart';
@@ -15,6 +16,7 @@ class Channels extends StatefulWidget{
   State<Channels> createState()=>_Channels(q);
 }
 class _Channels extends State<Channels> with SingleTickerProviderStateMixin {
+  var isFavourite=false;
   late TabController tabControler;
   Map<String, dynamic>? channelInfo;
   var videoNextPageId="";
@@ -33,6 +35,7 @@ class _Channels extends State<Channels> with SingleTickerProviderStateMixin {
       setState(() {
         channelInfo = data['items'][0];
       });
+      isFavourite=await check(2, channelInfo!['snippet']['title'], q);
     } else {
       throw Exception('Failed to load channel information');
     }
@@ -84,12 +87,13 @@ class _Channels extends State<Channels> with SingleTickerProviderStateMixin {
     tabControler=TabController(length: 3, vsync: this);
     loadBideos();
     loadPlaylists();
+    fetchChannelInfo();
   }
   @override
   Widget build(BuildContext context){
     return Scaffold(
       appBar: AppBar(
-        title: Text(_("channel")),
+        title: Text(channelInfo!['snippet']['title']),
         bottom:TabBar(tabs: [
           Tab(text:_("videos") ,),
           Tab(text: _("playlists"),),
@@ -100,7 +104,37 @@ class _Channels extends State<Channels> with SingleTickerProviderStateMixin {
           IconButton(onPressed: (){
             loadBideos();
             loadPlaylists();
-          }, icon: Icon(Icons.more),tooltip: _("show more"),)
+          }, icon: Icon(Icons.more),tooltip: _("show more"),),
+          IconButton(onPressed: (){
+  showDialog(context: context, builder: (BuildContext context){
+    return AlertDialog(
+      title: Text(_("more options")),
+      content: Center(
+        child: Column(
+          children: [
+                    CheckboxListTile(
+            value: isFavourite,
+            onChanged: (bool? newValue) async{
+              setState(() {
+                isFavourite = newValue ?? false;
+                              });
+                if (isFavourite) {
+                  await addFavourite(2, channelInfo!['snippet']['title'], q, q);
+                } else {
+                  await removeFromFavourite(2, channelInfo!['snippet']['title'], q);
+                }
+                Navigator.pop(context);
+            },
+            title: Text(_("favourite")),
+          ),
+
+          ],
+        ),
+      ),
+    );
+  });
+}, icon: Icon(Icons.more),tooltip:_("more options") ,)          
+
         ],
       ),
       body: 
@@ -170,16 +204,15 @@ class _Channels extends State<Channels> with SingleTickerProviderStateMixin {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
+                  ListTile(title: Text(
                     channelInfo!['snippet']['title'],
-                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                  ),
+                  )),
                   SizedBox(height: 8),
-                  Text(channelInfo!['snippet']['description']),
+                  ListTile(title:Text( channelInfo!['snippet']['description'])),
                   SizedBox(height: 16),
-                  Text('Subscribers: ${channelInfo!['statistics']['subscriberCount']}'),
-                  Text('Total Views: ${channelInfo!['statistics']['viewCount']}'),
-                  Text('Total Videos: ${channelInfo!['statistics']['videoCount']}'),
+                  ListTile(title:Text( _('Subscribers: ') + channelInfo!['statistics']['subscriberCount'])),
+                  ListTile(title:Text( _('Total Views: ') + channelInfo!['statistics']['viewCount'])),
+                  ListTile(title:Text( _('Total Videos: ') + channelInfo!['statistics']['videoCount'])),
                 ],
               ),
       ))

@@ -1,3 +1,5 @@
+import 'package:test/favourites/favouritesGUI.dart';
+
 import 'results/channelsResults .dart';
 import 'mediaPlayerViewDialogForUrls.dart';
 import 'playlistViewer.dart';
@@ -233,6 +235,9 @@ class _TestState extends State<Test> {
                 icon: Icon(Icons.search),
                 tooltip: _("open"),
               ),
+              IconButton(onPressed: (){
+                Navigator.push(context, MaterialPageRoute(builder: (context)=>Favourites()));
+              }, icon: Icon(Icons.favorite_outline),tooltip: _("favourites"),)
             ],
           ),
         ),
