@@ -1,4 +1,5 @@
 import 'package:test/favourites/favouritesGUI.dart';
+import 'package:test/trendingVideos.dart';
 
 import 'results/channelsResults .dart';
 import 'mediaPlayerViewDialogForUrls.dart';
@@ -237,7 +238,10 @@ class _TestState extends State<Test> {
               ),
               IconButton(onPressed: (){
                 Navigator.push(context, MaterialPageRoute(builder: (context)=>Favourites()));
-              }, icon: Icon(Icons.favorite_outline),tooltip: _("favourites"),)
+              }, icon: Icon(Icons.favorite_outline),tooltip: _("favourites"),),
+              ElevatedButton(onPressed: (){
+                Navigator.push(context, MaterialPageRoute(builder: (context)=>TrendingVideos()));
+              }, child: Text(_("trending videos"))),
             ],
           ),
         ),

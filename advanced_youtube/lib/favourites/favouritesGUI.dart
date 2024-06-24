@@ -72,6 +72,7 @@ class _Favourites extends State<Favourites> with SingleTickerProviderStateMixin 
                     var results=videosResults[index];
                     await removeFromFavourite(0, results["title"], results["channelId"]);
                     Navigator.pop(context);
+                    load();
                     setState(() {
                       
                     });
@@ -106,6 +107,7 @@ class _Favourites extends State<Favourites> with SingleTickerProviderStateMixin 
                                     IconButton(onPressed: () async{
                     var results=playlistsResults[index];
                     await removeFromFavourite(1, results["title"], results["channelId"]);
+                    load();
                     Navigator.pop(context);
                     setState(() {
                       
@@ -143,6 +145,7 @@ class _Favourites extends State<Favourites> with SingleTickerProviderStateMixin 
                     var results=channelResults[index];
                     await removeFromFavourite(2, results["title"], results["channelId"]);
                     Navigator.pop(context);
+                    load();
                     setState(() {
                       
                     });

@@ -1,3 +1,5 @@
+import 'package:test/viewText.dart';
+
 import 'favourites/favouritesJsonControl.dart';
 import 'channel.dart';
 import 'mediaPlayerViewDialogForUrls.dart';
@@ -16,6 +18,7 @@ class Playlistviewer extends StatefulWidget{
   State<Playlistviewer> createState()=>_Playlistviewer(q);
 }
 class _Playlistviewer extends State<Playlistviewer>{
+  var deskription="";
   var title="";
   var isFavourite=false;
   var channelId="";
@@ -38,6 +41,7 @@ class _Playlistviewer extends State<Playlistviewer>{
       nextPageId=data["nextPageToken"].toString();
       channelId=data['items'][0]['snippet']['channelId'];
       title = data['items'][0]['snippet']['title'];
+      deskription=data['items'][0]['snippet']['description'].toString();
       isFavourite=await check(1, title, channelId);
       for ( var video in data["items"]){
 
@@ -69,6 +73,9 @@ IconButton(onPressed: (){
       content: Center(
         child: Column(
           children: [
+            ElevatedButton(onPressed: (){
+              Navigator.push(context, MaterialPageRoute(builder: (context)=>ViewText(_("description"), deskription)));
+            }, child: Text(_("description"))),
                       ElevatedButton(onPressed: (){
                         Navigator.pop(context);
             Navigator.push(context, MaterialPageRoute(builder: (context)=>Channels(q: channelId)));
