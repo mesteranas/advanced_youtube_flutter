@@ -64,7 +64,7 @@ class _HistoryGUI extends State<HistoryGUI>{
           onTap: (){
           Navigator.push(context, MaterialPageRoute(builder: (context)=>MediaPlayerURLViewer(filePath: results[resultsKeys[index]])));
           },);
-        } ) 
+        } ,itemCount: results.keys.toList().length,) 
       : Text(_("loading ..."))
       ),
 

@@ -84,7 +84,7 @@ class _Favourites extends State<Favourites> with SingleTickerProviderStateMixin 
           onTap: (){
           Navigator.push(context, MaterialPageRoute(builder: (context)=>MediaPlayerURLViewer(filePath: "https://www.youtube.com/watch?v=" + videosResults[index]["id"])));
           },);
-        } ) 
+        } ,itemCount: videosResults.length,) 
       
       ),
       Center(

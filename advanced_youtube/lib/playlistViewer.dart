@@ -18,6 +18,7 @@ class Playlistviewer extends StatefulWidget{
   State<Playlistviewer> createState()=>_Playlistviewer(q);
 }
 class _Playlistviewer extends State<Playlistviewer>{
+    var thumbnails=[];
   var deskription="";
   var title="";
   var isFavourite=false;
@@ -44,6 +45,7 @@ class _Playlistviewer extends State<Playlistviewer>{
       deskription=data['items'][0]['snippet']['description'].toString();
       isFavourite=await check(1, title, channelId);
       for ( var video in data["items"]){
+        thumbnails.add(video['snippet']['thumbnails']['default']['url']);
 
         results[video["snippet"]["title"].toString() + _(" by ") + video["snippet"]["channelTitle"].toString()]="https://www.youtube.com/watch?v=" + video["snippet"]["resourceId"]["videoId"].toString();
       }
@@ -110,7 +112,22 @@ IconButton(onPressed: (){
         !loading
         ? ListView.builder(itemBuilder:(context,index){
           var resultsKeys=results.keys.toList();
-          return ListTile(title: Text(resultsKeys[index]),
+          return ListTile(contentPadding: EdgeInsets.all(8),
+              leading: Image.network(
+                thumbnails[index],
+                width: 100, // Set the width of the thumbnail
+                height: 100, // Set the height of the thumbnail
+                fit: BoxFit.cover,
+              ),
+              title: Text(
+                resultsKeys[index],
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
           onLongPress:(){
             showDialog(context: context, builder: (context){
               return AlertDialog(
@@ -131,7 +148,7 @@ IconButton(onPressed: (){
           onTap: (){
           Navigator.push(context, MaterialPageRoute(builder: (context)=>MediaPlayerURLViewer(filePath: results[resultsKeys[index]])));
           },);
-        } ) 
+        } ,itemCount: results.keys.toList().length,)
       : Text(_("loading ..."))
       ),
 

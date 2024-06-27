@@ -16,6 +16,8 @@ class Channels extends StatefulWidget{
   State<Channels> createState()=>_Channels(q);
 }
 class _Channels extends State<Channels> with SingleTickerProviderStateMixin {
+  var videosThumbnails=[];
+  var playlistsThumbnails=[];
   var isFavourite=false;
   late TabController tabControler;
   Map<String, dynamic>? channelInfo;
@@ -53,6 +55,7 @@ class _Channels extends State<Channels> with SingleTickerProviderStateMixin {
       var data=jsonDecode(responce.body);
       playlistNextPageId=data["nextPageToken"].toString();
       for ( var video in data["items"]){
+        playlistsThumbnails.add(video['snippet']['thumbnails']['default']['url']);
 
         playlistsResults[video["snippet"]["title"].toString() + " " + video["snippet"]["publishTime"].toString() + _(" by ") + video["snippet"]["channelTitle"].toString()]=video["id"]["playlistId"].toString();
       }
@@ -74,6 +77,7 @@ class _Channels extends State<Channels> with SingleTickerProviderStateMixin {
       var data=jsonDecode(responce.body);
       videoNextPageId=data["nextPageToken"].toString();
       for ( var video in data["items"]){
+        videosThumbnails.add(video['snippet']['thumbnails']['default']['url']);
 
         videosResults[video["snippet"]["title"].toString() + " " + video["snippet"]["publishTime"].toString() + _(" by ") + video["snippet"]["channelTitle"].toString()]="https://www.youtube.com/watch?v=" + video["id"]["videoId"].toString();
       }
@@ -144,7 +148,22 @@ class _Channels extends State<Channels> with SingleTickerProviderStateMixin {
         child:
          ListView.builder(itemBuilder:(context,index){
           var resultsKeys=videosResults.keys.toList();
-          return ListTile(title: Text(resultsKeys[index]),
+          return ListTile(contentPadding: EdgeInsets.all(8),
+              leading: Image.network(
+                videosThumbnails[index],
+                width: 100, // Set the width of the thumbnail
+                height: 100, // Set the height of the thumbnail
+                fit: BoxFit.cover,
+              ),
+              title: Text(
+                resultsKeys[index],
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
           onLongPress:(){
             showDialog(context: context, builder: (context){
               return AlertDialog(
@@ -165,14 +184,29 @@ class _Channels extends State<Channels> with SingleTickerProviderStateMixin {
           onTap: (){
           Navigator.push(context, MaterialPageRoute(builder: (context)=>MediaPlayerURLViewer(filePath: videosResults[resultsKeys[index]])));
           },);
-        } ) 
+        } ,itemCount: videosResults.keys.toList().length,) 
       
       ),
       Center(
                 child:
          ListView.builder(itemBuilder:(context,index){
           var resultsKeys=playlistsResults.keys.toList();
-          return ListTile(title: Text(resultsKeys[index]),
+          return ListTile(contentPadding: EdgeInsets.all(8),
+              leading: Image.network(
+                playlistsThumbnails[index],
+                width: 100, // Set the width of the thumbnail
+                height: 100, // Set the height of the thumbnail
+                fit: BoxFit.cover,
+              ),
+              title: Text(
+                resultsKeys[index],
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
           onLongPress:(){
             showDialog(context: context, builder: (context){
               return AlertDialog(

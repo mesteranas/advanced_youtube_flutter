@@ -14,6 +14,7 @@ class ChannelsSearchResults extends StatefulWidget{
   State<ChannelsSearchResults> createState()=>_ChannelsSearchResults(q);
 }
 class _ChannelsSearchResults extends State<ChannelsSearchResults>{
+    var thumbnails=[];
   var nextPageId="";
   var loading=true;
   var results={};
@@ -32,6 +33,7 @@ class _ChannelsSearchResults extends State<ChannelsSearchResults>{
       var data=jsonDecode(responce.body);
       nextPageId=data["nextPageToken"].toString();
       for ( var video in data["items"]){
+        thumbnails.add(video['snippet']['thumbnails']['default']['url']);
 
         results[video["snippet"]["title"].toString()]=video["id"]["channelId"].toString();
       }
@@ -61,7 +63,22 @@ class _ChannelsSearchResults extends State<ChannelsSearchResults>{
         !loading
         ? ListView.builder(itemBuilder:(context,index){
           var resultsKeys=results.keys.toList();
-          return ListTile(title: Text(resultsKeys[index]),
+          return ListTile(contentPadding: EdgeInsets.all(8),
+              leading: Image.network(
+                thumbnails[index],
+                width: 100, // Set the width of the thumbnail
+                height: 100, // Set the height of the thumbnail
+                fit: BoxFit.cover,
+              ),
+              title: Text(
+                resultsKeys[index],
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
           onLongPress:(){
             showDialog(context: context, builder: (context){
               return AlertDialog(
@@ -82,7 +99,7 @@ class _ChannelsSearchResults extends State<ChannelsSearchResults>{
           onTap: (){
           Navigator.push(context, MaterialPageRoute(builder: (context)=>Channels(q: results[resultsKeys[index]])));
           },);
-        } ) 
+        } ,itemCount: results.keys.toList().length  ,) 
       : Text(_("loading ..."))
       ),
 

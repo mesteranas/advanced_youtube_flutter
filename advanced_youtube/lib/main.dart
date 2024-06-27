@@ -1,3 +1,4 @@
+import 'package:permission_handler/permission_handler.dart';
 import 'package:test/favourites/favouritesGUI.dart';
 import 'package:test/history/historyGUI.dart';
 import 'package:test/trendingVideos.dart';
@@ -47,7 +48,13 @@ class _TestState extends State<Test> {
       selectedValueForSearch = value ?? 0;
     });
   }
-
+  Future<void> requestsPermitions() async{
+    await Permission.storage.request();
+  }
+  void initState(){
+    super.initState();
+    requestsPermitions();
+  }
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

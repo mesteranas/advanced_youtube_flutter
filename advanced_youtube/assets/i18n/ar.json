@@ -1,15 +1,1 @@
-{
-    "navigation menu":"قائمة التنقل",
-    "contect us":"تواصل معنا",
-    "donate":"تبرع",
-    "visite project on github":"زيارة المشروع على github",
-    "license":"الترخيص",
-    "error":"خطأ",
-    "about":"مساعدة",
-    "version: ":"الاصدار :",
-    "developer:":"المطور:",
-    "description:":"الوصف:",
-    "settings":"الإعدادات",
-    "general settings":"الإعدادات العامة",
-    "language":"اللغة"
-}
+{" by ": " بواسطة ", "videos": "الفيديوهات", "playlists": "قوائم التشغيل", "about": "حول", "show more": "عرض المزيد", "more options": "المزيد من الخيارات", "favourite": "المفضلة", "video options": "خيارات الفيديو", "copy link": "نسخ الرابط", "share link": "مشاركة الرابط", "options": "خيارات", "contect us": "تواصل معنا", "select a quality to download": "إختر جودة للتحميل", "downloading": "جاري التحميل", "an error detected": "تم اكتشاف خطأ", "downloaded": "تم التحميل", "close": "إغلاق", "navigation menu": "قائمة التنقل", "settings": "الإعدادات", "contact us": "تواصل معنا", "donate": "تبرع", "visit project on github": "زيارة المشروع على github", "license": "الترخيص", "error": "خطأ", "version: ": "الإصدار: ", "developer:": "المطور: ", "description:": "الوصف: ", "video": "فيديو", "playlist": "قائمة تشغيل", "channel": "قناة", "search": "بحث", "open": "فتح", "URL": "الرابط", "favourites": "المفضلة", "trending videos": "الفيديوهات الرائجة", "watch history": "سِجل المشاهدة", "toggle full screen": "تبديل ملء الشاشة", "video description": "وصف الفيديو", "description": "الوصف", "Error": "خطأ", "Failed to load comments": "تعظر تحميل التعليقات", "Close": "إغلاق", "comments": "التعليقات", "No comments found": "لا يوجد تعليقات متاحة", "download video": "تحميل الفيديو", "go to channel": "الانتقال إلى القنة", "duration ": "المدة ", " minuts": " دقائق", "published on ": "نُشِرَ في ", "more": "المزيد", "loading ...": "جاري التحميل ...", "general settings": "الإعدادات العامة", "language": "اللغة", "channels": "القنوات", "delete": "حذف", "search results": "نتائج البحث"}
